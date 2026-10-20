@@ -57,6 +57,20 @@ jobs:
             CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO \
             2>&1 | tee "$GITHUB_WORKSPACE/build.log"
 
+      - name: Surface build errors
+        if: failure()
+        run: |
+          python3 - <<'PY'
+          import re, os
+          lines = open(os.environ["GITHUB_WORKSPACE"] + "/build.log", errors="replace").read().splitlines()
+          def esc(t):
+              return t.replace("%", "%25").replace("\r", "").replace("\n", "%0A")
+          errs = [l for l in lines if re.search(r"error:|fatal error|FAILED:|ninja: build stopped|ARCHIVE FAILED|CMake Error", l)]
+          print("::error title=xcodebuild errors::" + esc("\n".join(errs[:12])[:3500]))
+          print("::error title=build.log tail::" + esc("\n".join(lines[-35:])[:3500]))
+          PY
+          xcodebuild -version | head -2 | sed 's/^/::notice::/'
+
       - name: Package IPA (ad-hoc signed, ready for SideStore/AltStore)
         run: |
           set -euo pipefail
