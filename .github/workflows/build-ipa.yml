@@ -1,0 +1,76 @@
+name: Build Prism IPA
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-26
+    timeout-minutes: 150
+
+    env:
+      HOMEBREW_NO_AUTO_UPDATE: "1"
+      HOMEBREW_NO_INSTALL_CLEANUP: "1"
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 1
+
+      - name: Select newest Xcode
+        run: |
+          XCODE="$(ls -d /Applications/Xcode_26*.app | sort -V | tail -1)"
+          echo "Using $XCODE"
+          sudo xcode-select -s "$XCODE"
+          xcodebuild -version
+
+      - name: Install build tools
+        run: brew install cmake ninja bartycrouch
+
+      - name: Build Prism (unsigned archive)
+        run: |
+          set -o pipefail
+          rm -rf archives && mkdir archives
+          xcodebuild archive \
+            -project Source/iOS/App/DolphiniOS.xcodeproj \
+            -scheme "DiOS (NJB)" \
+            -configuration "Release (Non-Jailbroken)" \
+            -archivePath "$GITHUB_WORKSPACE/archives/Prism.xcarchive" \
+            -derivedDataPath "$GITHUB_WORKSPACE/build-Xcode" \
+            -sdk iphoneos \
+            -destination generic/platform=iOS \
+            -skipPackagePluginValidation -skipMacroValidation \
+            DOL_PBID_ORGANIZATION_IDENTIFIER="dev.prismemu" \
+            DOL_BUILD_SOURCE="unofficial" \
+            CURRENT_PROJECT_VERSION=${{ github.run_number }} \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO \
+            2>&1 | tee "$GITHUB_WORKSPACE/build.log"
+
+      - name: Package IPA (ad-hoc signed, ready for SideStore/AltStore)
+        run: |
+          set -euo pipefail
+          mkdir -p products
+          APP="$GITHUB_WORKSPACE/archives/Prism.xcarchive/Products/Applications/DolphiniOS.app"
+          ls "$APP"
+          Source/iOS/App/Project/Scripts/CreateIpa.sh \
+            "$APP" "-" \
+            "$GITHUB_WORKSPACE/Source/iOS/App/Project/Entitlements/Public.entitlements" \
+            "$GITHUB_WORKSPACE/products/Prism.ipa"
+          ls -la products
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: Prism-build-${{ github.run_number }}
+          path: products/Prism.ipa
+          if-no-files-found: error
+
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log-${{ github.run_number }}
+          path: build.log

@@ -6,6 +6,8 @@
 	<string>NotSet</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+	<key>CFBundleDisplayName</key>
+	<string>Prism</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
