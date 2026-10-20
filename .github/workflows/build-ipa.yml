@@ -1,4 +1,4 @@
-name: Build Prism IPA
+name: Build PrismRVL IPA
 
 on:
   push:
@@ -30,7 +30,7 @@ jobs:
       - name: Install build tools
         run: brew install cmake ninja bartycrouch
 
-      - name: Build Prism (unsigned archive)
+      - name: Build PrismRVL (unsigned archive)
         run: |
           set -o pipefail
           rm -rf archives && mkdir archives
@@ -38,12 +38,12 @@ jobs:
             -project Source/iOS/App/DolphiniOS.xcodeproj \
             -scheme "DiOS (NJB)" \
             -configuration "Release (Non-Jailbroken)" \
-            -archivePath "$GITHUB_WORKSPACE/archives/Prism.xcarchive" \
+            -archivePath "$GITHUB_WORKSPACE/archives/PrismRVL.xcarchive" \
             -derivedDataPath "$GITHUB_WORKSPACE/build-Xcode" \
             -sdk iphoneos \
             -destination generic/platform=iOS \
             -skipPackagePluginValidation -skipMacroValidation \
-            DOL_PBID_ORGANIZATION_IDENTIFIER="dev.prismemu" \
+            DOL_PBID_ORGANIZATION_IDENTIFIER="dev.prismrvl" \
             DOL_BUILD_SOURCE="unofficial" \
             CURRENT_PROJECT_VERSION=${{ github.run_number }} \
             CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO \
@@ -53,19 +53,19 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p products
-          APP="$GITHUB_WORKSPACE/archives/Prism.xcarchive/Products/Applications/DolphiniOS.app"
+          APP="$GITHUB_WORKSPACE/archives/PrismRVL.xcarchive/Products/Applications/DolphiniOS.app"
           ls "$APP"
           Source/iOS/App/Project/Scripts/CreateIpa.sh \
             "$APP" "-" \
             "$GITHUB_WORKSPACE/Source/iOS/App/Project/Entitlements/Public.entitlements" \
-            "$GITHUB_WORKSPACE/products/Prism.ipa"
+            "$GITHUB_WORKSPACE/products/PrismRVL.ipa"
           ls -la products
 
       - name: Upload IPA
         uses: actions/upload-artifact@v4
         with:
-          name: Prism-build-${{ github.run_number }}
-          path: products/Prism.ipa
+          name: PrismRVL-build-${{ github.run_number }}
+          path: products/PrismRVL.ipa
           if-no-files-found: error
 
       - name: Upload build log

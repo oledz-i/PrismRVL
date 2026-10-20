@@ -7,7 +7,7 @@
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDisplayName</key>
-	<string>Prism</string>
+	<string>PrismRVL</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>

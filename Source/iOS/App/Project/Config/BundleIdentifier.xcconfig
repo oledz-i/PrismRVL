@@ -5,14 +5,14 @@
 // Change this line to modify the organization identifier.
 //
 
-DOL_PBID_ORGANIZATION_IDENTIFIER = dev.prismemu
+DOL_PBID_ORGANIZATION_IDENTIFIER = dev.prismrvl
 
 //
 // You probably shouldn't touch anything below. (Unless you know what you're doing.)
 //
 
-DOL_PBID_APP_NAME[sdk=iphoneos*] = Prism
-DOL_PBID_APP_NAME[sdk=iphonesimulator*] = Prism
+DOL_PBID_APP_NAME[sdk=iphoneos*] = PrismRVL
+DOL_PBID_APP_NAME[sdk=iphonesimulator*] = PrismRVL
 
 PRODUCT_BUNDLE_IDENTIFIER[config=Debug (Non-Jailbroken)] = $(DOL_PBID_ORGANIZATION_IDENTIFIER).$(DOL_PBID_APP_NAME)-njb-debug
 PRODUCT_BUNDLE_IDENTIFIER[config=Debug (Jailbroken)] = $(DOL_PBID_ORGANIZATION_IDENTIFIER).$(DOL_PBID_APP_NAME)-debug
