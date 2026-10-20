@@ -1,4 +1,5 @@
 // Copyright 2025 DolphiniOS Project
+// Copyright 2026 PrismRVL Project
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "Common/MemoryUtil.h"
@@ -22,6 +23,30 @@ constexpr size_t EXECUTABLE_REGION_SIZE = 536870912;
 static u8* g_rx_region = nullptr;
 static ptrdiff_t g_rw_region_diff = 0;
 
+// StikDebug "universal.js" calls (iOS 26, TXM/SPTM devices).
+//
+// The debugger script stops on `brk #0xf00d`, reads the command number from x16, skips the
+// breakpoint and runs the command. x0 and x1 carry the arguments and x0 carries the result.
+//   x16 = 0  detach the debugger
+//   x16 = 1  prepare [x0, x0 + x1) as an executable region, returns the region in x0
+// These must stay out-of-line and untouched by the optimizer so the registers line up.
+extern "C" {
+__attribute__((noinline, optnone, naked)) static void PrismJIT26Detach()
+{
+  asm volatile("mov x16, #0\n"
+               "brk #0xf00d\n"
+               "ret\n");
+}
+
+__attribute__((noinline, optnone, naked)) static void* PrismJIT26PrepareRegion(void* address,
+                                                                                size_t length)
+{
+  asm volatile("mov x16, #1\n"
+               "brk #0xf00d\n"
+               "ret\n");
+}
+}
+
 namespace Common
 {
 void AllocateExecutableMemoryRegion_LuckTXM()
@@ -32,17 +57,25 @@ void AllocateExecutableMemoryRegion_LuckTXM()
   }
 
   const size_t size = EXECUTABLE_REGION_SIZE;
-  u8* rx_ptr = static_cast<u8*>(mmap(nullptr, size, PROT_READ | PROT_EXEC, MAP_ANON | MAP_PRIVATE, -1, 0));
+  void* mapping = mmap(nullptr, size, PROT_READ | PROT_EXEC, MAP_ANON | MAP_PRIVATE, -1, 0);
 
-  if (!rx_ptr)
+  if (mapping == MAP_FAILED || mapping == nullptr)
   {
     PanicAlertFmt("AllocateExecutableMemoryRegion failed! mmap returned {}", LastStrerrorString());
     return;
   }
 
-  asm ("mov x0, %0\n"
-       "mov x1, %1\n"
-       "brk #0x69" :: "r" (rx_ptr), "r" (size) : "x0", "x1");
+  u8* rx_ptr = static_cast<u8*>(mapping);
+
+  void* prepared = PrismJIT26PrepareRegion(rx_ptr, size);
+
+  if (prepared != rx_ptr)
+  {
+    PanicAlertFmt("JIT setup failed: the debugger did not prepare the code region.\n\n"
+                  "Enable JIT from StikDebug with the universal.js script, then try again.");
+    munmap(rx_ptr, size);
+    return;
+  }
 
   vm_address_t rw_region = 0;
   vm_address_t target = reinterpret_cast<vm_address_t>(rx_ptr);
@@ -81,6 +114,10 @@ void AllocateExecutableMemoryRegion_LuckTXM()
 
   g_rx_region = rx_ptr;
   g_rw_region_diff = rw_ptr - rx_ptr;
+
+  // Everything the JIT will ever execute lives in this one region, so the debugger is no longer
+  // needed. Detaching also keeps fastmem faults from bouncing through the debug connection.
+  PrismJIT26Detach();
 }
 
 ptrdiff_t AllocateWritableRegionAndGetDiff_LuckTXM()

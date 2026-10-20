@@ -24,6 +24,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)performSegueForWiiUpdateWithSource:(NSString*)source isOnline:(bool)online;
 
+/// Number of tile columns for the current width.
+- (NSInteger)prismColumnCount;
+
+/// Called when the "Add Game" slot is tapped. Subclasses present an import picker.
+- (void)prismAddSlotSelected;
+
+/// The game shown at an index path, or nil for the add and empty slots.
+- (nullable GameFilePtrWrapper*)prismGameAtIndexPath:(NSIndexPath*)indexPath;
+
 @end
 
 NS_ASSUME_NONNULL_END

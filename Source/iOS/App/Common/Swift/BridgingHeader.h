@@ -14,6 +14,8 @@
 #import "JitManager+PTrace.h"
 #import "LegacyInputConfigMigrationService.h"
 #import "MainSceneCoordinator.h"
+#import "PrismInput.h"
+#import "PrismPerformance.h"
 #import "UpdateNoticeViewController.h"
 #import "UpdateRequiredNoticeViewController.h"
 

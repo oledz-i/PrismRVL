@@ -36,7 +36,20 @@ jobs:
           xcodebuild -version
 
       - name: Install build tools
-        run: brew install cmake ninja bartycrouch
+        run: brew install cmake ninja bartycrouch ccache
+
+      - name: Restore compiler cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/Library/Caches/ccache
+          key: ccache-ios-${{ github.sha }}
+          restore-keys: |
+            ccache-ios-
+
+      - name: Configure compiler cache
+        run: |
+          ccache --set-config=max_size=3G
+          ccache --zero-stats
 
       - name: Build PrismRVL (unsigned archive)
         run: |
@@ -56,6 +69,13 @@ jobs:
             CURRENT_PROJECT_VERSION=${{ github.run_number }} \
             CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO \
             2>&1 | tee "$GITHUB_WORKSPACE/build.log"
+
+      - name: Save compiler cache
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: ~/Library/Caches/ccache
+          key: ccache-ios-${{ github.sha }}-${{ github.run_attempt }}
 
       - name: Surface build errors
         if: failure()

@@ -196,6 +196,18 @@
 		B9FCB7E12898D1E80020E233 /* SwiftLocalizationUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9FCB7E02898D1E80020E233 /* SwiftLocalizationUtil.swift */; };
 		B9FCB7E42898F4D60020E233 /* JitManager+JitStreamer.m in Sources */ = {isa = PBXBuildFile; fileRef = B9FCB7E32898F4D60020E233 /* JitManager+JitStreamer.m */; };
 		B9FCB7E62898FAC10020E233 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9FCB7E52898FAC10020E233 /* GameController.framework */; };
+		C4E2B07C2965B4005CC9D901 /* PrismAmbience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42D3ECABC2098E2B0C553A8E /* PrismAmbience.swift */; };
+		43339028B29DFF811BFB4122 /* PrismHomeViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF7CD47888A362DA2F73F8A1 /* PrismHomeViews.swift */; };
+		A56DF66B0B313A9D626A64E4 /* PrismInput.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1A6E6B34E7D64C161E3771FA /* PrismInput.mm */; };
+		3C3B90114326D4054BB7EB27 /* PrismPerformance.mm in Sources */ = {isa = PBXBuildFile; fileRef = BC804FF65E2C24688A6C6182 /* PrismPerformance.mm */; };
+		FFBD538085AE7756A1EB584F /* PrismSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD66B7C14D5E5EE80226DBE5 /* PrismSettingsViewController.swift */; };
+		B444125ABD58526326C4C5F7 /* PrismTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7325574C041E44D024D3F29 /* PrismTheme.swift */; };
+		E9F4FA4481EF1E60E3F427F5 /* Prism-Back.wav in Resources */ = {isa = PBXBuildFile; fileRef = EA7DC053701809A18888F94C /* Prism-Back.wav */; };
+		563312CA1361CF86A613FB77 /* Prism-Boot.m4a in Resources */ = {isa = PBXBuildFile; fileRef = AE2FC74580C410DD36DB114D /* Prism-Boot.m4a */; };
+		B9FE5DF34CFB18AF09B7EACF /* Prism-Lamplight.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 508648932E5CFEDFFCDF2A8D /* Prism-Lamplight.m4a */; };
+		183DD4FC8959CE542EC5B1F8 /* Prism-Plaza.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 2DBD88907D171255E01951CE /* Prism-Plaza.m4a */; };
+		096CE2ABC3713B4C39B36EAC /* Prism-Refraction.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 022BF8106ADF78F41A43B1AC /* Prism-Refraction.m4a */; };
+		E13D32F06374877E9ED55E79 /* Prism-Select.wav in Resources */ = {isa = PBXBuildFile; fileRef = 302B72E57868D98CE1FBBA84 /* Prism-Select.wav */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -577,6 +589,20 @@
 		B9FF01E72977DCBE00B49B00 /* TrollStore.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = TrollStore.xcconfig; sourceTree = "<group>"; };
 		B9FF01E82977DCF700B49B00 /* Release (TrollStore).xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Release (TrollStore).xcconfig"; sourceTree = "<group>"; };
 		B9FF01E92977DD0000B49B00 /* Release (Beta, TrollStore).xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Release (Beta, TrollStore).xcconfig"; sourceTree = "<group>"; };
+		42D3ECABC2098E2B0C553A8E /* PrismAmbience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrismAmbience.swift; sourceTree = "<group>"; };
+		DF7CD47888A362DA2F73F8A1 /* PrismHomeViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrismHomeViews.swift; sourceTree = "<group>"; };
+		C9E738357D5B16DFEE707C1B /* PrismInput.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrismInput.h; sourceTree = "<group>"; };
+		1A6E6B34E7D64C161E3771FA /* PrismInput.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = PrismInput.mm; sourceTree = "<group>"; };
+		AD0F15F20F49E7DD30B3AA8C /* PrismPerformance.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrismPerformance.h; sourceTree = "<group>"; };
+		BC804FF65E2C24688A6C6182 /* PrismPerformance.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = PrismPerformance.mm; sourceTree = "<group>"; };
+		BD66B7C14D5E5EE80226DBE5 /* PrismSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrismSettingsViewController.swift; sourceTree = "<group>"; };
+		D7325574C041E44D024D3F29 /* PrismTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrismTheme.swift; sourceTree = "<group>"; };
+		EA7DC053701809A18888F94C /* Prism-Back.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Prism-Back.wav"; sourceTree = "<group>"; };
+		AE2FC74580C410DD36DB114D /* Prism-Boot.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Prism-Boot.m4a"; sourceTree = "<group>"; };
+		508648932E5CFEDFFCDF2A8D /* Prism-Lamplight.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Prism-Lamplight.m4a"; sourceTree = "<group>"; };
+		2DBD88907D171255E01951CE /* Prism-Plaza.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Prism-Plaza.m4a"; sourceTree = "<group>"; };
+		022BF8106ADF78F41A43B1AC /* Prism-Refraction.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Prism-Refraction.m4a"; sourceTree = "<group>"; };
+		302B72E57868D98CE1FBBA84 /* Prism-Select.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Prism-Select.wav"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -625,6 +651,7 @@
 				B900A7BB27F4CD16000361DD /* FoundationUtil */,
 				B9FCB7B6289658FC0020E233 /* Jit */,
 				B9749241296039BF00794509 /* Mapping */,
+				47AEDD54C388510B6B77E3A6 /* Prism */,
 				B900A7A827F27EB9000361DD /* Services */,
 				B933EDBB27F6A5C7004D7DD7 /* Swift */,
 				B900A7BF27F4D2E4000361DD /* UI */,
@@ -1055,6 +1082,7 @@
 		B950CA922846A10400F45219 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				6C24D1F74AD711AE52023F08 /* Audio */,
 				B9F41C3B2DC53699006D2434 /* cacert.pem */,
 				B97492482960F64300794509 /* DefaultPreferences.plist */,
 				B97E4B5929657BCB00B3EE9C /* GoogleService-Info.plist */,
@@ -1723,6 +1751,34 @@
 			path = Alert;
 			sourceTree = "<group>";
 		};
+		47AEDD54C388510B6B77E3A6 /* Prism */ = {
+			isa = PBXGroup;
+			children = (
+				42D3ECABC2098E2B0C553A8E /* PrismAmbience.swift */,
+				DF7CD47888A362DA2F73F8A1 /* PrismHomeViews.swift */,
+				C9E738357D5B16DFEE707C1B /* PrismInput.h */,
+				1A6E6B34E7D64C161E3771FA /* PrismInput.mm */,
+				AD0F15F20F49E7DD30B3AA8C /* PrismPerformance.h */,
+				BC804FF65E2C24688A6C6182 /* PrismPerformance.mm */,
+				BD66B7C14D5E5EE80226DBE5 /* PrismSettingsViewController.swift */,
+				D7325574C041E44D024D3F29 /* PrismTheme.swift */,
+			);
+			path = Prism;
+			sourceTree = "<group>";
+		};
+		6C24D1F74AD711AE52023F08 /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				EA7DC053701809A18888F94C /* Prism-Back.wav */,
+				AE2FC74580C410DD36DB114D /* Prism-Boot.m4a */,
+				508648932E5CFEDFFCDF2A8D /* Prism-Lamplight.m4a */,
+				2DBD88907D171255E01951CE /* Prism-Plaza.m4a */,
+				022BF8106ADF78F41A43B1AC /* Prism-Refraction.m4a */,
+				302B72E57868D98CE1FBBA84 /* Prism-Select.wav */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1824,6 +1880,18 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E9F4FA4481EF1E60E3F427F5 /* Prism-Back.wav in Resources */,
+				563312CA1361CF86A613FB77 /* Prism-Boot.m4a in Resources */,
+				B9FE5DF34CFB18AF09B7EACF /* Prism-Lamplight.m4a in Resources */,
+				183DD4FC8959CE542EC5B1F8 /* Prism-Plaza.m4a in Resources */,
+				096CE2ABC3713B4C39B36EAC /* Prism-Refraction.m4a in Resources */,
+				E13D32F06374877E9ED55E79 /* Prism-Select.wav in Resources */,
+				C4E2B07C2965B4005CC9D901 /* PrismAmbience.swift in Sources */,
+				43339028B29DFF811BFB4122 /* PrismHomeViews.swift in Sources */,
+				A56DF66B0B313A9D626A64E4 /* PrismInput.mm in Sources */,
+				3C3B90114326D4054BB7EB27 /* PrismPerformance.mm in Sources */,
+				FFBD538085AE7756A1EB584F /* PrismSettingsViewController.swift in Sources */,
+				B444125ABD58526326C4C5F7 /* PrismTheme.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2881,7 +2949,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = DolphiniOS/Info.plist;
 				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
-				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "DolphiniOS uses the local network to find and communicate with AltServer.";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "PrismRVL uses the local network to find and communicate with AltServer.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -2892,7 +2960,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.0.0b6;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -2972,7 +3040,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = DolphiniOS/Info.plist;
 				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
-				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "DolphiniOS uses the local network to find and communicate with AltServer.";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "PrismRVL uses the local network to find and communicate with AltServer.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -2983,7 +3051,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.0.0b6;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -3062,7 +3130,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = DolphiniOS/Info.plist;
 				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
-				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "DolphiniOS uses the local network to find and communicate with AltServer.";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "PrismRVL uses the local network to find and communicate with AltServer.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -3073,7 +3141,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.0.0b6;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -3152,7 +3220,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = DolphiniOS/Info.plist;
 				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
-				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "DolphiniOS uses the local network to find and communicate with AltServer.";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "PrismRVL uses the local network to find and communicate with AltServer.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -3163,7 +3231,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.0.0b6;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -3300,7 +3368,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = DolphiniOS/Info.plist;
 				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
-				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "DolphiniOS uses the local network to find and communicate with AltServer.";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "PrismRVL uses the local network to find and communicate with AltServer.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -3311,7 +3379,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.0.0b6;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -3334,7 +3402,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = DolphiniOS/Info.plist;
 				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
-				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "DolphiniOS uses the local network to find and communicate with AltServer.";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "PrismRVL uses the local network to find and communicate with AltServer.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -3345,7 +3413,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.0.0b6;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -3424,7 +3492,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = DolphiniOS/Info.plist;
 				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
-				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "DolphiniOS uses the local network to find and communicate with AltServer.";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "PrismRVL uses the local network to find and communicate with AltServer.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -3435,7 +3503,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.0.0b6;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -3514,7 +3582,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = DolphiniOS/Info.plist;
 				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
-				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "DolphiniOS uses the local network to find and communicate with AltServer.";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "PrismRVL uses the local network to find and communicate with AltServer.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -3525,7 +3593,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.0.0b6;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

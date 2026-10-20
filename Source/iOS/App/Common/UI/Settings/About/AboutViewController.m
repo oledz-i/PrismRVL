@@ -21,7 +21,7 @@
 }
 
 - (IBAction)sourceCodePressed:(id)sender {
-  NSURL* url = [NSURL URLWithString:@"https://github.com/oatmealdome/dolphin-ios/"];
+  NSURL* url = [NSURL URLWithString:@"https://github.com/oledz-i/PrismRVL"];
   [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
 }
 

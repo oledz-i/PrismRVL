@@ -43,11 +43,11 @@
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G2L-KW-hUh" userLabel="Donate Text">
                                     <rect key="frame" x="0.0" y="0.0" width="335" height="223.33333333333334"/>
-                                    <string key="text">DolphiniOS is NOT an official version of Dolphin. It is a separate version based on the original Dolphin's code.
+                                    <string key="text">PrismRVL is an independent project built on Dolphin and DolphiniOS. It isn't an official release of either one.
 
-DO NOT ask for help on the official Dolphin forums or report bugs on the official Dolphin bug tracker. They will not be able to assist you.
+Please don't ask the Dolphin or DolphiniOS teams for help with PrismRVL, and don't report PrismRVL bugs to them. Open an issue on the PrismRVL GitHub page instead.
 
-If you need help, go to the Settings tab and tap "Help".</string>
+Have fun, and please only play games you own.</string>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>

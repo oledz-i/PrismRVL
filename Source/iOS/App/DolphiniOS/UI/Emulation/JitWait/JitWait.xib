@@ -45,13 +45,11 @@
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Lp-si-dj1" userLabel="Warning Text">
                                     <rect key="frame" x="0.5" y="0.0" width="334.5" height="264"/>
-                                    <string key="text">DolphiniOS is waiting for a remote debugger to connect before emulation can start.
+                                    <string key="text">PrismRVL is waiting for JIT before the game starts.
 
-The Dolphin core uses a technique known as "JIT" to emulate the GameCube and Wii's CPU at fast speeds.
+Tap "Open StikDebug" and pick PrismRVL. If StikDebug asks for a script, choose universal.js.
 
-Apple does not allow JIT to be used on iOS by default. However, by attaching a debugger, iOS will allow JIT to be used.
-
-For more information, tap "Help".</string>
+JIT runs the Wii and GameCube CPU at full speed. You can also play without it, which is much slower.</string>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
@@ -85,14 +83,14 @@ For more information, tap "Help".</string>
                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="np2-xh-cqO">
                                     <rect key="frame" x="20" y="20" width="335" height="155"/>
                                     <subviews>
-                                        <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sCq-RD-iKA" userLabel="Help">
+                                        <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sCq-RD-iKA" userLabel="Open StikDebug">
                                             <rect key="frame" x="0.0" y="0.0" width="335" height="45"/>
                                             <color key="backgroundColor" systemColor="linkColor"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="45" id="a9Z-2E-qwn"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                            <state key="normal" title="Help">
+                                            <state key="normal" title="Open StikDebug">
                                                 <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </state>
                                             <userDefinedRuntimeAttributes>
@@ -111,7 +109,7 @@ For more information, tap "Help".</string>
                                                 <constraint firstAttribute="height" constant="45" id="8Ys-JG-Ove"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                            <state key="normal" title="Use No JIT Mode (Slow)">
+                                            <state key="normal" title="Play Without JIT (Slower)">
                                                 <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </state>
                                             <userDefinedRuntimeAttributes>

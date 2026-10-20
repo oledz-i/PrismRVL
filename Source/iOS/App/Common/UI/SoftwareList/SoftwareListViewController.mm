@@ -14,6 +14,74 @@
 
 #import "UICommon/GameFile.h"
 
+static NSString* const PrismChannelReuseIdentifier = @"prismChannel";
+
+// Wii and GameCube banners are 32-bit ARGB in native byte order, the same layout Dolphin Qt reads.
+static UIImage* PrismImageFromBanner(const UICommon::GameBanner& banner) {
+  if (banner.empty() || banner.width == 0 || banner.height == 0) {
+    return nil;
+  }
+
+  const size_t width = banner.width;
+  const size_t height = banner.height;
+
+  if (banner.buffer.size() < width * height) {
+    return nil;
+  }
+
+  NSData* data = [NSData dataWithBytes:banner.buffer.data() length:width * height * sizeof(u32)];
+  CGDataProviderRef provider = CGDataProviderCreateWithCFData((__bridge CFDataRef)data);
+  CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+
+  const CGBitmapInfo info = (CGBitmapInfo)kCGBitmapByteOrder32Little | (CGBitmapInfo)kCGImageAlphaFirst;
+  CGImageRef cgImage = CGImageCreate(width, height, 8, 32, width * 4, colorSpace, info, provider, NULL,
+                                     false, kCGRenderingIntentDefault);
+
+  CGColorSpaceRelease(colorSpace);
+  CGDataProviderRelease(provider);
+
+  if (cgImage == NULL) {
+    return nil;
+  }
+
+  UIImage* image = [UIImage imageWithCGImage:cgImage];
+  CGImageRelease(cgImage);
+
+  return image;
+}
+
+static NSString* PrismPlatformName(DiscIO::Platform platform) {
+  switch (platform) {
+    case DiscIO::Platform::GameCubeDisc:
+    case DiscIO::Platform::Triforce:
+      return @"GameCube";
+    case DiscIO::Platform::WiiDisc:
+      return @"Wii";
+    case DiscIO::Platform::WiiWAD:
+      return @"WiiWare";
+    case DiscIO::Platform::ELFOrDOL:
+      return @"Homebrew";
+    default:
+      return @"Game";
+  }
+}
+
+static NSString* PrismPlatformSymbol(DiscIO::Platform platform) {
+  switch (platform) {
+    case DiscIO::Platform::GameCubeDisc:
+    case DiscIO::Platform::Triforce:
+      return @"cube.fill";
+    case DiscIO::Platform::WiiDisc:
+      return @"opticaldisc";
+    case DiscIO::Platform::WiiWAD:
+      return @"square.stack.3d.up.fill";
+    case DiscIO::Platform::ELFOrDOL:
+      return @"hammer.fill";
+    default:
+      return @"gamecontroller.fill";
+  }
+}
+
 @interface SoftwareListViewController ()
 
 @end
@@ -26,7 +94,28 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
   
+  [self.collectionView registerClass:[PrismChannelCell class] forCellWithReuseIdentifier:PrismChannelReuseIdentifier];
+  
   self->_gameFiles = [[GameFileCacheManager sharedManager] getGames];
+}
+
+- (NSInteger)prismColumnCount {
+  UIEdgeInsets safe = self.collectionView.safeAreaInsets;
+  CGFloat width = self.collectionView.bounds.size.width - safe.left - safe.right;
+  
+  return [PrismHomeMetrics columnsForWidth:width];
+}
+
+- (void)prismAddSlotSelected {
+  // Overridden by the platform subclass.
+}
+
+- (nullable GameFilePtrWrapper*)prismGameAtIndexPath:(NSIndexPath*)indexPath {
+  if (indexPath.item < 0 || indexPath.item >= (NSInteger)self->_gameFiles.count) {
+    return nil;
+  }
+  
+  return [self->_gameFiles objectAtIndex:indexPath.item];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -94,46 +183,87 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView*)collectionView numberOfItemsInSection:(NSInteger)section {
-  return self->_gameFiles.count;
+  return [PrismHomeMetrics slotCountForGameCount:(NSInteger)self->_gameFiles.count columns:[self prismColumnCount]];
 }
 
 - (UICollectionViewCell*)collectionView:(UICollectionView*)collectionView cellForItemAtIndexPath:(NSIndexPath*)indexPath {
-  SoftwareListCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"softwareCell" forIndexPath:indexPath];
-  GameFilePtrWrapper* gameFileWrapper = [self->_gameFiles objectAtIndex:indexPath.item];
+  PrismChannelCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:PrismChannelReuseIdentifier forIndexPath:indexPath];
   
-  NSString* gameName = CppToFoundationString(gameFileWrapper.gameFile->GetName(UICommon::GameFile::Variant::LongAndPossiblyCustom));
+  GameFilePtrWrapper* gameFileWrapper = [self prismGameAtIndexPath:indexPath];
   
-  const UICommon::GameCover& cover = gameFileWrapper.gameFile->GetCoverImage();
+  if (gameFileWrapper == nil) {
+    if (indexPath.item == (NSInteger)self->_gameFiles.count) {
+      [cell configureAddSlot];
+    } else {
+      [cell configureEmptySlot];
+    }
+    
+    return cell;
+  }
   
-  UIImage* image;
-  if (cover.buffer.empty()) {
-    image = [UIImage imageNamed:@"NoCover"];
-  } else {
+  const auto& game = gameFileWrapper.gameFile;
+  
+  NSString* gameName = CppToFoundationString(game->GetName(UICommon::GameFile::Variant::LongAndPossiblyCustom));
+  
+  UIImage* image = nil;
+  
+  const UICommon::GameCover& cover = game->GetCoverImage();
+  if (!cover.buffer.empty()) {
     NSData* data = [NSData dataWithBytes:cover.buffer.data() length:cover.buffer.size()];
     image = [UIImage imageWithData:data];
   }
   
-  cell.imageView.image = image;
-  cell.nameLabel.text = gameName;
+  if (image == nil) {
+    image = PrismImageFromBanner(game->GetBannerImage());
+  }
+  
+  [cell configureGameWithTitle:gameName
+                         image:image
+                      platform:PrismPlatformName(game->GetPlatform())
+                        symbol:PrismPlatformSymbol(game->GetPlatform())];
   
   return cell;
 }
 
+- (BOOL)collectionView:(UICollectionView*)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath*)indexPath {
+  return indexPath.item <= (NSInteger)self->_gameFiles.count;
+}
+
 - (void)collectionView:(UICollectionView*)collectionView didSelectItemAtIndexPath:(NSIndexPath*)indexPath {
-  GameFilePtrWrapper* gameFileWrapper = [self->_gameFiles objectAtIndex:indexPath.item];
+  GameFilePtrWrapper* gameFileWrapper = [self prismGameAtIndexPath:indexPath];
   
-  [self loadGameFile:gameFileWrapper];
+  if (gameFileWrapper != nil) {
+    [[PrismAmbience shared] playSelect];
+    [self loadGameFile:gameFileWrapper];
+  } else if (indexPath.item == (NSInteger)self->_gameFiles.count) {
+    [[PrismAmbience shared] playSelect];
+    [self prismAddSlotSelected];
+  }
 }
 
 #pragma mark <UICollectionViewDelegateFlowLayout>
 
 - (CGSize)collectionView:(UICollectionView*)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath*)indexPath {
-  const CGFloat cellsPerRow = 3.f;
-  const CGFloat cellSpacing = 4.f;
-  const CGFloat cellHeight = 218.f;
+  UIEdgeInsets safe = collectionView.safeAreaInsets;
+  CGFloat width = collectionView.bounds.size.width - safe.left - safe.right;
   
-  CGFloat totalSpacing = ((cellsPerRow - 1) * cellSpacing);
-  return CGSizeMake((collectionView.bounds.size.width - totalSpacing) / cellsPerRow, cellHeight);
+  return [PrismHomeMetrics itemSizeForWidth:width columns:[self prismColumnCount]];
+}
+
+- (UIEdgeInsets)collectionView:(UICollectionView*)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section {
+  UIEdgeInsets safe = collectionView.safeAreaInsets;
+  const CGFloat margin = PrismHomeMetrics.margin;
+  
+  return UIEdgeInsetsMake(0, margin + safe.left, 0, margin + safe.right);
+}
+
+- (CGFloat)collectionView:(UICollectionView*)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
+  return PrismHomeMetrics.spacing;
+}
+
+- (CGFloat)collectionView:(UICollectionView*)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
+  // Slightly under the real gap so rounding never pushes a tile onto the next row.
+  return PrismHomeMetrics.spacing - 1;
 }
 
 #pragma mark Segue

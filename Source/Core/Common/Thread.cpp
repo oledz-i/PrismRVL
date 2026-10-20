@@ -12,7 +12,9 @@
 #endif
 
 #ifdef __APPLE__
+#include <cstring>
 #include <mach/mach.h>
+#include <pthread/qos.h>
 #elif defined BSD4_4 || defined __FreeBSD__ || defined __OpenBSD__
 #include <pthread_np.h>
 #elif defined __NetBSD__
@@ -169,6 +171,19 @@ void SetCurrentThreadName(const char* name)
 {
 #ifdef __APPLE__
   pthread_setname_np(name);
+#ifdef IPHONEOS
+  // PrismRVL: iOS decides P-core vs E-core placement from the QoS class. Without this the
+  // emulation threads inherit the default class and can be parked on efficiency cores.
+  if (std::strncmp(name, "CPU", 3) == 0 || std::strncmp(name, "FIFO", 4) == 0 ||
+      std::strcmp(name, "Video thread") == 0 || std::strcmp(name, "Mach exception thread") == 0)
+  {
+    pthread_set_qos_class_self_np(QOS_CLASS_USER_INTERACTIVE, 0);
+  }
+  else if (std::strncmp(name, "AsyncShaderCompiler", 19) == 0)
+  {
+    pthread_set_qos_class_self_np(QOS_CLASS_USER_INITIATED, 0);
+  }
+#endif
 #elif defined __FreeBSD__ || defined __OpenBSD__
   pthread_set_name_np(pthread_self(), name);
 #elif defined(__NetBSD__)

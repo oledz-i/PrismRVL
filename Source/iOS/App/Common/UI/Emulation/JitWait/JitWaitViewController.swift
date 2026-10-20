@@ -57,9 +57,41 @@ class JitWaitViewController: UIViewController {
     }
   }
   
+  /// Asks StikDebug to attach to this process. On TXM devices the request names universal.js,
+  /// which matches the breakpoint calls the JIT allocator makes.
   @IBAction func helpPressed(_ sender: Any) {
-    let url = URL.init(string: "https://dolphinios.oatmealdome.me/jit-help")
-    UIApplication.shared.open(url!, options: [:], completionHandler: nil)
+    var components = URLComponents()
+    components.scheme = "stikdebug"
+    components.host = "enable-jit"
+    components.queryItems = [
+      URLQueryItem(name: "bundle-id", value: Bundle.main.bundleIdentifier ?? ""),
+      URLQueryItem(name: "pid", value: String(getpid()))
+    ]
+
+    if JitManager.shared().deviceHasTxm {
+      components.queryItems?.append(URLQueryItem(name: "script-name", value: "universal.js"))
+    }
+
+    guard let url = components.url else {
+      return
+    }
+
+    UIApplication.shared.open(url, options: [:]) { opened in
+      if opened {
+        return
+      }
+
+      var message = "Install StikDebug, then come back here and tap Open StikDebug again. "
+        + "You can also enable JIT from StikDebug yourself: choose PrismRVL and the universal.js script."
+
+      if ProcessInfo.processInfo.environment["LC_HOME_PATH"] != nil {
+        message += "\n\nRunning in LiveContainer: turn on \"Use LiveContainer's Bundle ID\" in LiveContainer's settings first."
+      }
+
+      let alert = UIAlertController(title: "StikDebug Not Found", message: message, preferredStyle: .alert)
+      alert.addAction(UIAlertAction(title: DOLCoreLocalizedString("OK"), style: .default))
+      self.present(alert, animated: true)
+    }
   }
   
   @IBAction func noJitPressed(_ sender: Any) {

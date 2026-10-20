@@ -44,7 +44,7 @@
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="90n-Az-9Cs" userLabel="Content Stack">
                             <rect key="frame" x="20" y="0.0" width="335" height="80.666666666666671"/>
                             <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="DolphiniOS version 1.0.0 is now available." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G2L-KW-hUh" userLabel="Version Text">
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PrismRVL version 1.0.0 is now available." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G2L-KW-hUh" userLabel="Version Text">
                                     <rect key="frame" x="12.333333333333343" y="0.0" width="310.66666666666663" height="20.333333333333332"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <nil key="textColor"/>
@@ -58,7 +58,7 @@
                                 </label>
                                 <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="luA-1B-bZp" userLabel="Save States Warning">
                                     <rect key="frame" x="-253.33333333333334" y="70.666666666666657" width="841.66666666666663" height="0.0"/>
-                                    <string key="text">WARNING: Save states made on this version of DolphiniOS cannot be loaded after updating to the new version.
+                                    <string key="text">WARNING: Save states made on this version of PrismRVL cannot be loaded after updating to the new version.
 
 Save data on GameCube Memory Cards or the emulated Wii's memory is not affected.</string>
                                     <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="17"/>

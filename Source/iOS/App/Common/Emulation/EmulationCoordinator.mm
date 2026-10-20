@@ -3,6 +3,8 @@
 
 #import "EmulationCoordinator.h"
 
+#import "PrismPerformance.h"
+
 #import <MetalKit/MetalKit.h>
 
 #import "Common/MemoryUtil.h"
@@ -127,6 +129,8 @@
       Config::SetBase(Config::GFX_VERTEX_LOADER_TYPE, VertexLoaderType::Software);
     }
     
+    [PrismPerformance applyForBootWithJit:[JitManager shared].acquiredJit];
+    
     std::unique_ptr<BootParameters> boot = [bootParameter generateDolphinBootParameter];
     
     if (!BootManager::BootCore(system, std::move(boot), wsi)) {
@@ -146,6 +150,10 @@
   
   dispatch_sync(dispatch_get_main_queue(), ^{
     Core::DeclareAsHostThread();
+  });
+  
+  DOLHostQueueRunSync(^{
+    [PrismPerformance clearAfterEmulation];
   });
   
   [[NSNotificationCenter defaultCenter] postNotificationName:DOLEmulationDidEndNotification object:self userInfo:nil];

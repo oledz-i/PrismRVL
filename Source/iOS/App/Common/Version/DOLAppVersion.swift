@@ -41,7 +41,7 @@ import Foundation
     case .development:
       overrideBuild = "D"
     case .unofficial:
-      overrideBuild = "U"
+      overrideBuild = String(build)
     case .official:
       overrideBuild = String(build)
     default:

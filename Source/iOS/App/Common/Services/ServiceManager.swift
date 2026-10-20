@@ -17,8 +17,7 @@ class ServiceManager {
     GameFileCacheService(),
     JitAcquisitionService(),
     FirebaseService(),
-    AudioSessionCategoryService(),
-    UpdateCheckService()
+    AudioSessionCategoryService()
   ]
   
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {

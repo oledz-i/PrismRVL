@@ -21,7 +21,7 @@
 			<string>Owner</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>me.oatmealdome.dolphinios.generic-software</string>
+				<string>dev.prismrvl.generic-software</string>
 			</array>
 		</dict>
 		<dict>
@@ -35,7 +35,7 @@
 			<string>Owner</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>me.oatmealdome.dolphinios.gamecube-software</string>
+				<string>dev.prismrvl.gamecube-software</string>
 			</array>
 		</dict>
 		<dict>
@@ -49,7 +49,7 @@
 			<string>Owner</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>me.oatmealdome.dolphinios.wii-software</string>
+				<string>dev.prismrvl.wii-software</string>
 			</array>
 		</dict>
 		<dict>
@@ -63,7 +63,7 @@
 			<string>Owner</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>me.oatmealdome.dolphinios.skylander-dumps</string>
+				<string>dev.prismrvl.skylander-dumps</string>
 			</array>
 		</dict>
 	</array>
@@ -145,7 +145,7 @@
 			<key>UTTypeIconFiles</key>
 			<array/>
 			<key>UTTypeIdentifier</key>
-			<string>me.oatmealdome.dolphinios.generic-software</string>
+			<string>dev.prismrvl.generic-software</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
@@ -168,7 +168,7 @@
 			<key>UTTypeIconFiles</key>
 			<array/>
 			<key>UTTypeIdentifier</key>
-			<string>me.oatmealdome.dolphinios.gamecube-software</string>
+			<string>dev.prismrvl.gamecube-software</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
@@ -189,7 +189,7 @@
 			<key>UTTypeIconFiles</key>
 			<array/>
 			<key>UTTypeIdentifier</key>
-			<string>me.oatmealdome.dolphinios.wii-software</string>
+			<string>dev.prismrvl.wii-software</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
@@ -210,7 +210,7 @@
 			<key>UTTypeIconFiles</key>
 			<array/>
 			<key>UTTypeIdentifier</key>
-			<string>me.oatmealdome.dolphinios.skylander-dumps</string>
+			<string>dev.prismrvl.skylander-dumps</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>

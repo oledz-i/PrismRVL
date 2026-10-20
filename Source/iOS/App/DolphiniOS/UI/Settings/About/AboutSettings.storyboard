@@ -36,7 +36,7 @@
                                                     <constraint firstAttribute="height" constant="128" id="d8R-IJ-300"/>
                                                 </constraints>
                                             </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="DolphiniOS" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tic-qF-vKG">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PrismRVL" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tic-qF-vKG">
                                                 <rect key="frame" x="0.0" y="98.5" width="335" height="33.5"/>
                                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="28"/>
                                                 <color key="textColor" systemColor="systemBlueColor"/>
@@ -44,8 +44,8 @@
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dxR-ZO-FZU" userLabel="Copyright One">
                                                 <rect key="frame" x="0.0" y="157.5" width="335" height="41"/>
-                                                <string key="text">© 2003-2015+ Dolphin Team. 
-© 2019-2024+ DolphiniOS Project.</string>
+                                                <string key="text">© 2026 PrismRVL Project.
+Built on Dolphin (© 2003-2015+ Dolphin Team) and DolphiniOS (© 2019-2024+ DolphiniOS Project).</string>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -53,12 +53,12 @@
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="JaN-3a-Tvq" userLabel="Copyright Three">
                                                 <rect key="frame" x="0.0" y="223.5" width="335" height="81.5"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <string key="text">DolphiniOS is an unofficial and separately maintained port of Dolphin to iOS. The DolphiniOS Project has no relation to Dolphin Team.</string>
+                                                <string key="text">PrismRVL is free software under the GNU GPL, version 2 or later. It is maintained separately from Dolphin and DolphiniOS, and neither team is responsible for it. Menu music and sounds are original to PrismRVL.</string>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="“GameCube” and “Wii” are trademarks of Nintendo. DolphiniOS is not affiliated with Nintendo in any way." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="8w5-VR-H8a" userLabel="Piracy Notice">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="“GameCube” and “Wii” are trademarks of Nintendo. PrismRVL is not affiliated with or endorsed by Nintendo." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="8w5-VR-H8a" userLabel="Piracy Notice">
                                                 <rect key="frame" x="0.0" y="330.5" width="335" height="61"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>

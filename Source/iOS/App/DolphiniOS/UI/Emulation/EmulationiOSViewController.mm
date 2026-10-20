@@ -27,6 +27,7 @@
 #import "HostNotifications.h"
 #import "HostQueue.h"
 #import "LocalizationUtil.h"
+#import "PrismInput.h"
 #import "VirtualMFiControllerManager.h"
 
 typedef NS_ENUM(NSInteger, DOLEmulationVisibleTouchPad) {
@@ -161,6 +162,10 @@ typedef NS_ENUM(NSInteger, DOLEmulationVisibleTouchPad) {
   UIMenu* visibleControllerMenu = [UIMenu menuWithTitle:@"Touch Controller" image:[UIImage systemImageNamed:@"gamecontroller"] identifier:nil options:0 children:visibleControllerActions];
   [controllerActions addObject:visibleControllerMenu];
 
+  if (Core::System::GetInstance().IsWii()) {
+    [controllerActions addObject:[self prismWiiStyleMenu]];
+  }
+
   if (wiimoteTouchPadAttached) {
     TCWiiTouchIRMode irMode = (TCWiiTouchIRMode)Config::Get(Config::MAIN_TOUCH_PAD_IR_MODE);
 
@@ -241,7 +246,7 @@ typedef NS_ENUM(NSInteger, DOLEmulationVisibleTouchPad) {
         UIAlertAction* loadAction = [UIAlertAction actionWithTitle:@"Load" style:UIAlertActionStyleDefault
                                                        handler:^(UIAlertAction* action) {
             NSArray<UTType*>* types = @[
-                [UTType exportedTypeWithIdentifier:@"me.oatmealdome.dolphinios.skylander-dumps"]
+                [UTType exportedTypeWithIdentifier:@"dev.prismrvl.skylander-dumps"]
               ];
             UIDocumentPickerViewController* pickerController = [[UIDocumentPickerViewController alloc] initForOpeningContentTypes:types];
             pickerController.delegate = self;
@@ -282,6 +287,59 @@ typedef NS_ENUM(NSInteger, DOLEmulationVisibleTouchPad) {
   self.navigationItem.leftBarButtonItem.menu = [UIMenu menuWithChildren:menuItems];
 }
 
+- (UIMenu*)prismWiiStyleMenu {
+  const PrismWiiStyle currentStyle = [PrismInput currentWiiStyle];
+  NSString* gameID = [PrismInput currentGameID];
+  NSNumber* remembered = gameID != nil ? [PrismInput rememberedStyleForGameID:gameID] : nil;
+
+  NSMutableArray<UIMenuElement*>* styleActions = [[NSMutableArray alloc] init];
+
+  for (NSNumber* styleNumber in PrismInput.allWiiStyles) {
+    const PrismWiiStyle style = (PrismWiiStyle)styleNumber.integerValue;
+
+    UIAction* action = [UIAction actionWithTitle:[PrismInput nameForWiiStyle:style]
+                                           image:[UIImage systemImageNamed:[PrismInput symbolForWiiStyle:style]]
+                                      identifier:nil
+                                         handler:^(UIAction*) {
+      [PrismInput applyWiiStyle:style];
+
+      NSString* runningID = [PrismInput currentGameID];
+      if (runningID != nil && [PrismInput rememberedStyleForGameID:runningID] != nil) {
+        [PrismInput rememberStyle:style forGameID:runningID];
+      }
+
+      [self updateVisibleTouchPadToWii];
+      [self recreateMenu];
+
+      [self.navigationController setNavigationBarHidden:true animated:true];
+    }];
+
+    action.state = style == currentStyle ? UIMenuElementStateOn : UIMenuElementStateOff;
+    [styleActions addObject:action];
+  }
+
+  if (gameID != nil) {
+    UIAction* rememberAction = [UIAction actionWithTitle:@"Remember for This Game"
+                                                   image:[UIImage systemImageNamed:@"pin"]
+                                              identifier:nil
+                                                 handler:^(UIAction*) {
+      if ([PrismInput rememberedStyleForGameID:gameID] != nil) {
+        [PrismInput forgetStyleForGameID:gameID];
+      } else {
+        [PrismInput rememberStyle:[PrismInput currentWiiStyle] forGameID:gameID];
+      }
+
+      [self recreateMenu];
+    }];
+
+    rememberAction.state = remembered != nil ? UIMenuElementStateOn : UIMenuElementStateOff;
+
+    [styleActions addObject:[UIMenu menuWithTitle:@"" image:nil identifier:nil options:UIMenuOptionsDisplayInline children:@[rememberAction]]];
+  }
+
+  return [UIMenu menuWithTitle:@"Wii Remote Style" image:[UIImage systemImageNamed:@"wand.and.rays"] identifier:nil options:0 children:styleActions];
+}
+
 - (void)viewDidLayoutSubviews {
   if (g_presenter) {
     g_presenter->ResizeSurface();
@@ -299,6 +357,7 @@ typedef NS_ENUM(NSInteger, DOLEmulationVisibleTouchPad) {
 - (void)receiveTitleChangedNotificationiOS {
   dispatch_async(dispatch_get_main_queue(), ^{
     if (Core::System::GetInstance().IsWii()) {
+      [PrismInput applyRememberedStyleForCurrentGame];
       [self updateVisibleTouchPadToWii];
     } else {
       [self updateVisibleTouchPadToGameCube];
@@ -360,16 +419,25 @@ typedef NS_ENUM(NSInteger, DOLEmulationVisibleTouchPad) {
     return;
   }
 
+  // Follow the selected style rather than the extension the emulated remote currently reports.
+  // The emulator only swaps extensions on its next input update, so reading the active one right
+  // after a style change would show the previous overlay.
   DOLEmulationVisibleTouchPad targetTouchPad;
 
-  const auto wiimote = static_cast<WiimoteEmu::Wiimote*>(Wiimote::GetConfig()->GetController(0));
-
-  if (wiimote->GetActiveExtensionNumber() == WiimoteEmu::ExtensionNumber::CLASSIC) {
-    targetTouchPad = DOLEmulationVisibleTouchPadClassic;
-  } else if (wiimote->IsSideways()) {
-    targetTouchPad = DOLEmulationVisibleTouchPadSidewaysWiimote;
-  } else {
-    targetTouchPad = DOLEmulationVisibleTouchPadWiimote;
+  switch ([PrismInput currentWiiStyle]) {
+    case PrismWiiStyleClassic:
+      targetTouchPad = DOLEmulationVisibleTouchPadClassic;
+      break;
+    case PrismWiiStyleSideways:
+      targetTouchPad = DOLEmulationVisibleTouchPadSidewaysWiimote;
+      break;
+    case PrismWiiStyleVertical:
+    case PrismWiiStyleNunchuk:
+    case PrismWiiStyleMotionPlus:
+    case PrismWiiStyleNunchukMotionPlus:
+    default:
+      targetTouchPad = DOLEmulationVisibleTouchPadWiimote;
+      break;
   }
 
   [self updateVisibleTouchPadWithType:targetTouchPad];

@@ -22,6 +22,7 @@
 #import "GameFilePtrWrapper.h"
 #import "ImportFileManager.h"
 #import "LocalizationUtil.h"
+#import "Swift.h"
 
 typedef NS_ENUM(NSInteger, DOLSoftwareListDocumentPickerType) {
   DOLSoftwareListDocumentPickerTypeImportSoftware,
@@ -32,22 +33,151 @@ typedef NS_ENUM(NSInteger, DOLSoftwareListDocumentPickerType) {
 @implementation SoftwareListiOSViewController {
   DOLSoftwareListDocumentPickerType _pickerType;
   NSURL* _openedUrl;
+  
+  PrismHomeBackgroundView* _background;
+  PrismDockView* _dock;
+  NSLayoutConstraint* _dockHeight;
+}
+
+#pragma mark Home screen
+
+- (void)viewDidLoad {
+  [super viewDidLoad];
+  
+  _background = [[PrismHomeBackgroundView alloc] initWithFrame:self.view.bounds];
+  self.collectionView.backgroundView = _background;
+  self.collectionView.backgroundColor = UIColor.clearColor;
+  self.collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+  self.collectionView.alwaysBounceVertical = true;
+  
+  _dock = [[PrismDockView alloc] initWithFrame:CGRectZero];
+  _dock.translatesAutoresizingMaskIntoConstraints = false;
+  
+  __weak SoftwareListiOSViewController* weakSelf = self;
+  _dock.onSettings = ^{
+    [weakSelf presentPrismSettings];
+  };
+  
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivePrismThemeChanged) name:@"PrismThemeDidChange" object:nil];
+}
+
+- (void)dealloc {
+  [[NSNotificationCenter defaultCenter] removeObserver:self name:@"PrismThemeDidChange" object:nil];
+}
+
+- (void)attachDockIfNeeded {
+  UIView* host = self.navigationController.view;
+  
+  if (host == nil || _dock.superview == host) {
+    return;
+  }
+  
+  [_dock removeFromSuperview];
+  [host addSubview:_dock];
+  
+  _dockHeight = [_dock.heightAnchor constraintEqualToConstant:PrismHomeMetrics.dockHeight];
+  
+  [NSLayoutConstraint activateConstraints:@[
+    [_dock.leadingAnchor constraintEqualToAnchor:host.leadingAnchor],
+    [_dock.trailingAnchor constraintEqualToAnchor:host.trailingAnchor],
+    [_dock.bottomAnchor constraintEqualToAnchor:host.bottomAnchor],
+    _dockHeight
+  ]];
+}
+
+- (void)hideTabBar {
+  UITabBarController* tabBarController = self.tabBarController;
+  
+  if (tabBarController == nil) {
+    return;
+  }
+  
+  if (@available(iOS 18.0, *)) {
+    [tabBarController setTabBarHidden:true animated:false];
+  }
+  
+  tabBarController.tabBar.hidden = true;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
   [super viewWillAppear:animated];
   
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveImportFileFinishedNotification) name:DOLImportFileFinishedNotification object:nil];
+  
+  [self.navigationController setNavigationBarHidden:true animated:animated];
+  [self hideTabBar];
+  
+  [self attachDockIfNeeded];
+  _dock.hidden = false;
+  [_dock startClock];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
   [super viewWillDisappear:animated];
   
   [[NSNotificationCenter defaultCenter] removeObserver:self name:DOLImportFileFinishedNotification object:nil];
+  
+  [_dock stopClock];
+  [[PrismAmbience shared] homeWillDisappear];
+  
+  // A pushed screen (game properties) needs the navigation bar back and the dock out of the way.
+  if (self.navigationController.topViewController != self) {
+    [self.navigationController setNavigationBarHidden:false animated:animated];
+    _dock.hidden = true;
+  }
+}
+
+- (void)viewDidLayoutSubviews {
+  [super viewDidLayoutSubviews];
+  
+  const CGFloat bottomSafeArea = self.view.window != nil ? self.view.window.safeAreaInsets.bottom : 0;
+  const CGFloat dockHeight = PrismHomeMetrics.dockHeight + bottomSafeArea;
+  
+  if (_dockHeight != nil && _dockHeight.constant != dockHeight) {
+    _dockHeight.constant = dockHeight;
+  }
+  
+  UIEdgeInsets insets = UIEdgeInsetsMake(self.view.safeAreaInsets.top + 22, 0, dockHeight + 20, 0);
+  
+  if (!UIEdgeInsetsEqualToEdgeInsets(self.collectionView.contentInset, insets)) {
+    self.collectionView.contentInset = insets;
+    self.collectionView.verticalScrollIndicatorInsets = UIEdgeInsetsMake(insets.top, 0, dockHeight, 0);
+  }
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+  [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+  
+  [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>) {
+    [self.collectionView.collectionViewLayout invalidateLayout];
+  } completion:^(id<UIViewControllerTransitionCoordinatorContext>) {
+    [self.collectionView reloadData];
+  }];
+}
+
+- (void)presentPrismSettings {
+  if (self.presentedViewController != nil) {
+    return;
+  }
+  
+  [self presentViewController:[PrismSettingsViewController makeNavigationController] animated:true completion:nil];
+}
+
+- (void)receivePrismThemeChanged {
+  [_background applyTheme];
+  [_dock applyTheme];
+  [self.collectionView reloadData];
+}
+
+- (void)prismAddSlotSelected {
+  [self addButtonPressed:self];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
   [super viewDidAppear:animated];
+  
+  [[PrismThemeManager shared] applyToApp];
+  [[PrismAmbience shared] homeDidAppear];
   
   if (_openedUrl != nil) {
     [_openedUrl stopAccessingSecurityScopedResource];
@@ -129,7 +259,15 @@ typedef NS_ENUM(NSInteger, DOLSoftwareListDocumentPickerType) {
   addIPLAction(DiscIO::Region::NTSC_U, @"NTSC-U", USA_DIR);
   addIPLAction(DiscIO::Region::PAL, @"PAL", EUR_DIR);
   
-  self.navigationItem.leftBarButtonItem.menu = [UIMenu menuWithChildren:@[
+  UIMenu* libraryMenu = [UIMenu menuWithChildren:@[
+    [UIMenu menuWithTitle:@"" image:nil identifier:nil options:UIMenuOptionsDisplayInline children:@[
+      [UIAction actionWithTitle:@"Add Game…" image:[UIImage systemImageNamed:@"plus"] identifier:nil handler:^(UIAction*) {
+        [self addButtonPressed:self];
+      }],
+      [UIAction actionWithTitle:@"Refresh Library" image:[UIImage systemImageNamed:@"arrow.clockwise"] identifier:nil handler:^(UIAction*) {
+        [self reloadGameFiles];
+      }]
+    ]],
     [UIAction actionWithTitle:DOLCoreLocalizedString(@"Open") image:[UIImage systemImageNamed:@"externaldrive"] identifier:nil handler:^(UIAction*) {
       [self openDocumentPickerWithSoftwareContentTypesAndPickerType:DOLSoftwareListDocumentPickerTypeOpenExternal];
     }],
@@ -138,13 +276,16 @@ typedef NS_ENUM(NSInteger, DOLSoftwareListDocumentPickerType) {
     ]],
     [UIMenu menuWithTitle:DOLCoreLocalizedString(@"Wii") image:nil identifier:nil options:UIMenuOptionsDisplayInline children:wiiActions]
   ]];
+  
+  self.navigationItem.leftBarButtonItem.menu = libraryMenu;
+  [_dock setLibraryMenu:libraryMenu];
 }
 
 - (void)openDocumentPickerWithSoftwareContentTypesAndPickerType:(DOLSoftwareListDocumentPickerType)pickerType {
   NSArray<UTType*>* types = @[
-    [UTType exportedTypeWithIdentifier:@"me.oatmealdome.dolphinios.generic-software"],
-    [UTType exportedTypeWithIdentifier:@"me.oatmealdome.dolphinios.gamecube-software"],
-    [UTType exportedTypeWithIdentifier:@"me.oatmealdome.dolphinios.wii-software"]
+    [UTType exportedTypeWithIdentifier:@"dev.prismrvl.generic-software"],
+    [UTType exportedTypeWithIdentifier:@"dev.prismrvl.gamecube-software"],
+    [UTType exportedTypeWithIdentifier:@"dev.prismrvl.wii-software"]
   ];
   
   [self openDocumentPickerWithContentTypes:types pickerType:pickerType];
@@ -232,8 +373,14 @@ typedef NS_ENUM(NSInteger, DOLSoftwareListDocumentPickerType) {
 }
 
 - (UIContextMenuConfiguration*)collectionView:(UICollectionView*)collectionView contextMenuConfigurationForItemAtIndexPath:(NSIndexPath*)indexPath point:(CGPoint)point {
+  GameFilePtrWrapper* gameFileWrapper = [self prismGameAtIndexPath:indexPath];
+  
+  if (gameFileWrapper == nil) {
+    // The add slot and empty slots have no actions.
+    return nil;
+  }
+  
   return [UIContextMenuConfiguration configurationWithIdentifier:nil previewProvider:nil actionProvider:^(NSArray<UIMenuElement*>*) {
-    GameFilePtrWrapper* gameFileWrapper = [self->_gameFiles objectAtIndex:indexPath.row];
     
     NSMutableArray<UIAction*>* actions = [[NSMutableArray alloc] init];
     
