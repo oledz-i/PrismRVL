@@ -4,14 +4,19 @@ on:
   push:
     branches: [ master ]
   workflow_dispatch:
+    inputs:
+      runner:
+        description: "Runner label (macos-latest is Apple silicon, macos-15-intel is Intel)"
+        required: false
+        default: macos-latest
 
 concurrency:
-  group: prismrvl-ipa
+  group: prismrvl-ipa-${{ inputs.runner || 'macos-latest' }}
   cancel-in-progress: true
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: ${{ inputs.runner || 'macos-latest' }}
     timeout-minutes: 150
 
     env:
@@ -42,9 +47,9 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: ~/Library/Caches/ccache
-          key: ccache-ios-${{ github.sha }}
+          key: ccache-ios-${{ runner.arch }}-${{ github.sha }}
           restore-keys: |
-            ccache-ios-
+            ccache-ios-${{ runner.arch }}-
 
       - name: Configure compiler cache
         run: |
@@ -75,7 +80,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: ~/Library/Caches/ccache
-          key: ccache-ios-${{ github.sha }}-${{ github.run_attempt }}
+          key: ccache-ios-${{ runner.arch }}-${{ github.sha }}-${{ github.run_attempt }}
 
       - name: Surface build errors
         if: failure()
