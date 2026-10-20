@@ -9,6 +9,7 @@
 #import "GameFileCacheManager.h"
 #import "GameFilePtrWrapper.h"
 #import "SoftwarePropertiesViewController.h"
+#import "PrismInterop.h"
 #import "Swift.h"
 #import "WiiSystemUpdateViewController.h"
 
@@ -94,7 +95,7 @@ static NSString* PrismPlatformSymbol(DiscIO::Platform platform) {
 - (void)viewDidLoad {
   [super viewDidLoad];
   
-  [self.collectionView registerClass:[PrismChannelCell class] forCellWithReuseIdentifier:PrismChannelReuseIdentifier];
+  [self.collectionView registerClass:PrismChannelCellClass() forCellWithReuseIdentifier:PrismChannelReuseIdentifier];
   
   self->_gameFiles = [[GameFileCacheManager sharedManager] getGames];
 }
@@ -103,7 +104,7 @@ static NSString* PrismPlatformSymbol(DiscIO::Platform platform) {
   UIEdgeInsets safe = self.collectionView.safeAreaInsets;
   CGFloat width = self.collectionView.bounds.size.width - safe.left - safe.right;
   
-  return [PrismHomeMetrics columnsForWidth:width];
+  return [PrismHomeMetricsClass() columnsForWidth:width];
 }
 
 - (void)prismAddSlotSelected {
@@ -183,11 +184,11 @@ static NSString* PrismPlatformSymbol(DiscIO::Platform platform) {
 }
 
 - (NSInteger)collectionView:(UICollectionView*)collectionView numberOfItemsInSection:(NSInteger)section {
-  return [PrismHomeMetrics slotCountForGameCount:(NSInteger)self->_gameFiles.count columns:[self prismColumnCount]];
+  return [PrismHomeMetricsClass() slotCountForGameCount:(NSInteger)self->_gameFiles.count columns:[self prismColumnCount]];
 }
 
 - (UICollectionViewCell*)collectionView:(UICollectionView*)collectionView cellForItemAtIndexPath:(NSIndexPath*)indexPath {
-  PrismChannelCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:PrismChannelReuseIdentifier forIndexPath:indexPath];
+  UICollectionViewCell<PrismChannelCellMethods>* cell = (UICollectionViewCell<PrismChannelCellMethods>*)[collectionView dequeueReusableCellWithReuseIdentifier:PrismChannelReuseIdentifier forIndexPath:indexPath];
   
   GameFilePtrWrapper* gameFileWrapper = [self prismGameAtIndexPath:indexPath];
   
@@ -233,10 +234,10 @@ static NSString* PrismPlatformSymbol(DiscIO::Platform platform) {
   GameFilePtrWrapper* gameFileWrapper = [self prismGameAtIndexPath:indexPath];
   
   if (gameFileWrapper != nil) {
-    [[PrismAmbience shared] playSelect];
+    [PrismAmbienceShared() playSelect];
     [self loadGameFile:gameFileWrapper];
   } else if (indexPath.item == (NSInteger)self->_gameFiles.count) {
-    [[PrismAmbience shared] playSelect];
+    [PrismAmbienceShared() playSelect];
     [self prismAddSlotSelected];
   }
 }
@@ -247,23 +248,23 @@ static NSString* PrismPlatformSymbol(DiscIO::Platform platform) {
   UIEdgeInsets safe = collectionView.safeAreaInsets;
   CGFloat width = collectionView.bounds.size.width - safe.left - safe.right;
   
-  return [PrismHomeMetrics itemSizeForWidth:width columns:[self prismColumnCount]];
+  return [PrismHomeMetricsClass() itemSizeForWidth:width columns:[self prismColumnCount]];
 }
 
 - (UIEdgeInsets)collectionView:(UICollectionView*)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section {
   UIEdgeInsets safe = collectionView.safeAreaInsets;
-  const CGFloat margin = PrismHomeMetrics.margin;
+  const CGFloat margin = [PrismHomeMetricsClass() margin];
   
   return UIEdgeInsetsMake(0, margin + safe.left, 0, margin + safe.right);
 }
 
 - (CGFloat)collectionView:(UICollectionView*)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
-  return PrismHomeMetrics.spacing;
+  return [PrismHomeMetricsClass() spacing];
 }
 
 - (CGFloat)collectionView:(UICollectionView*)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
   // Slightly under the real gap so rounding never pushes a tile onto the next row.
-  return PrismHomeMetrics.spacing - 1;
+  return [PrismHomeMetricsClass() spacing] - 1;
 }
 
 #pragma mark Segue

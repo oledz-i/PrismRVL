@@ -603,6 +603,7 @@
 		2DBD88907D171255E01951CE /* Prism-Plaza.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Prism-Plaza.m4a"; sourceTree = "<group>"; };
 		022BF8106ADF78F41A43B1AC /* Prism-Refraction.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Prism-Refraction.m4a"; sourceTree = "<group>"; };
 		302B72E57868D98CE1FBBA84 /* Prism-Select.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Prism-Select.wav"; sourceTree = "<group>"; };
+		48FD8347AD79C9EC8BA0F7C2 /* PrismInterop.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrismInterop.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1756,6 +1757,7 @@
 			children = (
 				42D3ECABC2098E2B0C553A8E /* PrismAmbience.swift */,
 				DF7CD47888A362DA2F73F8A1 /* PrismHomeViews.swift */,
+				48FD8347AD79C9EC8BA0F7C2 /* PrismInterop.h */,
 				C9E738357D5B16DFEE707C1B /* PrismInput.h */,
 				1A6E6B34E7D64C161E3771FA /* PrismInput.mm */,
 				AD0F15F20F49E7DD30B3AA8C /* PrismPerformance.h */,

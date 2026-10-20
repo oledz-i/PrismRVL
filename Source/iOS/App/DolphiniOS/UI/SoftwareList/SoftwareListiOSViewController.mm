@@ -22,6 +22,7 @@
 #import "GameFilePtrWrapper.h"
 #import "ImportFileManager.h"
 #import "LocalizationUtil.h"
+#import "PrismInterop.h"
 #import "Swift.h"
 
 typedef NS_ENUM(NSInteger, DOLSoftwareListDocumentPickerType) {
@@ -34,8 +35,8 @@ typedef NS_ENUM(NSInteger, DOLSoftwareListDocumentPickerType) {
   DOLSoftwareListDocumentPickerType _pickerType;
   NSURL* _openedUrl;
   
-  PrismHomeBackgroundView* _background;
-  PrismDockView* _dock;
+  UIView<PrismBackgroundMethods>* _background;
+  UIView<PrismDockMethods>* _dock;
   NSLayoutConstraint* _dockHeight;
 }
 
@@ -44,13 +45,13 @@ typedef NS_ENUM(NSInteger, DOLSoftwareListDocumentPickerType) {
 - (void)viewDidLoad {
   [super viewDidLoad];
   
-  _background = [[PrismHomeBackgroundView alloc] initWithFrame:self.view.bounds];
+  _background = PrismMakeHomeBackground(self.view.bounds);
   self.collectionView.backgroundView = _background;
   self.collectionView.backgroundColor = UIColor.clearColor;
   self.collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
   self.collectionView.alwaysBounceVertical = true;
   
-  _dock = [[PrismDockView alloc] initWithFrame:CGRectZero];
+  _dock = PrismMakeDock();
   _dock.translatesAutoresizingMaskIntoConstraints = false;
   
   __weak SoftwareListiOSViewController* weakSelf = self;
@@ -75,7 +76,7 @@ typedef NS_ENUM(NSInteger, DOLSoftwareListDocumentPickerType) {
   [_dock removeFromSuperview];
   [host addSubview:_dock];
   
-  _dockHeight = [_dock.heightAnchor constraintEqualToConstant:PrismHomeMetrics.dockHeight];
+  _dockHeight = [_dock.heightAnchor constraintEqualToConstant:[PrismHomeMetricsClass() dockHeight]];
   
   [NSLayoutConstraint activateConstraints:@[
     [_dock.leadingAnchor constraintEqualToAnchor:host.leadingAnchor],
@@ -118,7 +119,7 @@ typedef NS_ENUM(NSInteger, DOLSoftwareListDocumentPickerType) {
   [[NSNotificationCenter defaultCenter] removeObserver:self name:DOLImportFileFinishedNotification object:nil];
   
   [_dock stopClock];
-  [[PrismAmbience shared] homeWillDisappear];
+  [PrismAmbienceShared() homeWillDisappear];
   
   // A pushed screen (game properties) needs the navigation bar back and the dock out of the way.
   if (self.navigationController.topViewController != self) {
@@ -131,7 +132,7 @@ typedef NS_ENUM(NSInteger, DOLSoftwareListDocumentPickerType) {
   [super viewDidLayoutSubviews];
   
   const CGFloat bottomSafeArea = self.view.window != nil ? self.view.window.safeAreaInsets.bottom : 0;
-  const CGFloat dockHeight = PrismHomeMetrics.dockHeight + bottomSafeArea;
+  const CGFloat dockHeight = [PrismHomeMetricsClass() dockHeight] + bottomSafeArea;
   
   if (_dockHeight != nil && _dockHeight.constant != dockHeight) {
     _dockHeight.constant = dockHeight;
@@ -160,7 +161,7 @@ typedef NS_ENUM(NSInteger, DOLSoftwareListDocumentPickerType) {
     return;
   }
   
-  [self presentViewController:[PrismSettingsViewController makeNavigationController] animated:true completion:nil];
+  [self presentViewController:PrismMakeSettingsController() animated:true completion:nil];
 }
 
 - (void)receivePrismThemeChanged {
@@ -176,8 +177,8 @@ typedef NS_ENUM(NSInteger, DOLSoftwareListDocumentPickerType) {
 - (void)viewDidAppear:(BOOL)animated {
   [super viewDidAppear:animated];
   
-  [[PrismThemeManager shared] applyToApp];
-  [[PrismAmbience shared] homeDidAppear];
+  [PrismThemeManagerShared() applyToApp];
+  [PrismAmbienceShared() homeDidAppear];
   
   if (_openedUrl != nil) {
     [_openedUrl stopAccessingSecurityScopedResource];

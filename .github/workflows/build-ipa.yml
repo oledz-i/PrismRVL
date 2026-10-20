@@ -39,6 +39,8 @@ jobs:
             echo "No Xcode 26 found, using default"; ls /Applications | grep -i xcode || true
           fi
           xcodebuild -version
+          # Keep compiling other files after an error so one run reports as many problems as possible.
+          defaults write com.apple.dt.Xcode IDEBuildingContinueBuildingAfterErrors -bool YES
 
       - name: Install build tools
         run: brew install cmake ninja bartycrouch ccache
@@ -91,10 +93,18 @@ jobs:
           def esc(t):
               return t.replace("%", "%25").replace("\r", "").replace("\n", "%0A")
           errs = [l for l in lines if re.search(r"error:|fatal error|FAILED:|ninja: build stopped|ARCHIVE FAILED|CMake Error", l)]
-          print("::error title=xcodebuild errors::" + esc("\n".join(errs[:12])[:3500]))
+          print("::error title=xcodebuild errors::" + esc("\n".join(errs[:30])[:6000]))
           print("::error title=build.log tail::" + esc("\n".join(lines[-35:])[:3500]))
           PY
           xcodebuild -version | head -2 | sed 's/^/::notice::/'
+          HEADER="$(find "$GITHUB_WORKSPACE/build-Xcode" -name 'DolphiniOS-Swift.h' -path '*arm64*' 2>/dev/null | head -1)"
+          if [ -n "$HEADER" ]; then
+            echo "::notice title=Swift header::$(grep -c 'Prism' "$HEADER") Prism lines in $(basename "$HEADER")"
+            echo "::notice title=Swift header classes::$(grep -o 'SWIFT_CLASS[_A-Z]*("[^"]*")' "$HEADER" | grep -i prism | tr '\n' ' ')"
+          else
+            echo "::notice title=Swift header::not generated"
+          fi
+          grep -E '\.swift:[0-9]+:[0-9]+: error:' build.log | head -15 | sed 's/^/::error title=swift::/' || true
 
       - name: Package IPA (ad-hoc signed, ready for SideStore/AltStore)
         run: |
